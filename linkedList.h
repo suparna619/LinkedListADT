@@ -1,9 +1,10 @@
 typedef struct node Node;
 typedef Node * Node_ptr;
+typedef struct student Student;
 
 typedef struct linked_list LinkedList;
 typedef LinkedList * linkedList_ptr;
-typedef struct student Student;
+typedef void functionRef(void*); 
 
 
 struct student
@@ -23,13 +24,13 @@ struct linked_list{
 
 struct node{
 	void* data;
-	Node_ptr *next;
+	Node_ptr next;
 };
 
 
 LinkedList createList(void);
-Node *create_node(void *data);
-int add_to_list(LinkedList *, Node *);
+Node * create_node(void *data);
+int add_to_list(LinkedList *,Node *);
 void *get_first_element(LinkedList list);
 void *get_last_element(LinkedList list);
-void traverse(LinkedList, void (*)(void *data));
+void traverse(LinkedList list, functionRef* operation);

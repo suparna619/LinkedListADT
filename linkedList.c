@@ -18,17 +18,13 @@ Node *create_node(void *data){
 };
 
 int add_to_list(LinkedList *list, Node *node){
-	void *tailAddress = &(list->tail);
-	
 	if(list->head == NULL)
 		list->head = node;
-
-	else{
-		list->tail = node;
-		node->next = tailAddress;
-	}
+    else
+    	list->tail->next = node;
+	list->tail = node;
 	list->count++;
-	return list->count;
+    return list->count;
 }
 
 void *get_first_element(LinkedList list){
@@ -39,6 +35,9 @@ void *get_last_element(LinkedList list){
 	return list.tail;
 }
 
-// void traverse(LinkedList list, void (*)(void *data)){
-
-// }
+void traverse(LinkedList list, functionRef* operation){
+	while(list.head != NULL){
+		operation(&(list.head->data));
+		list.head = list.head->next;
+	}
+};

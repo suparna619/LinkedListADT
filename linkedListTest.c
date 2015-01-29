@@ -64,13 +64,31 @@ void test__add_to_list_02__add_to_list_add_the_node_into_the_list_and_return_1_a
 };
 
 void test__add_to_list_03__add_to_list_add_the_node_into_the_list_and_return_1_as_count(){
-	char* data = "01";
+	char *data = "01";
 	int count;
 	LinkedList newList = createList();
 	Node_ptr expected_node = create_node((void*)data);
 	count = add_to_list(&newList,expected_node);
 	assertEqual(count,1);
 	free(expected_node);
+};
+
+void test__add_to_list_04__add_to_list_add_the_nodes_into_list_and_give_count_of_nodes(){
+	char *name = "STRING-DATA1";
+	char *name1 = "STRING-DATA2";
+	int count;
+	Node_ptr expected_node1, expected_node2;
+	LinkedList newList = createList();
+
+	expected_node2 = create_node((void*)name);
+	count = add_to_list(&newList,expected_node2);
+	
+	expected_node1 = create_node((void*)name1);
+	count = add_to_list(&newList,expected_node1);
+
+	assertEqual(count,2);
+	free(expected_node1);
+	free(expected_node2);
 };
 
 void test__get_first_element_01__get_first_element_will_return_the_data_of_first_node(){
@@ -158,7 +176,6 @@ void test__get_last_element_02__get_first_element_will_return_the_data_of_last_n
 	free(secondNodeToInsert);
 };
 
-
 void test__get_last_element_03__get_first_element_will_return_the_data_of_last_node(){
 	char *data1 = "01", *data2 = "02";
 	char **result;
@@ -174,4 +191,26 @@ void test__get_last_element_03__get_first_element_will_return_the_data_of_last_n
 	assert(*result == "02");
 	free(firstNodeToInsert);
 	free(secondNodeToInsert);
+};
+
+void increament_by_five(void* data){
+	*(int*)data = *(int*)data+5;
+};
+
+void test__traverse_01__traverse_gives_all_elements_increament_by_five(){
+	void *result1, *result2;
+	int data1 = 1, data2 = 2;
+	LinkedList list = createList();
+	Node_ptr firstNodeToInsert = create_node((void*)data1);
+	Node_ptr secondNodeToInsert = create_node((void*)data2);
+
+	add_to_list(&list, firstNodeToInsert);
+	add_to_list(&list, secondNodeToInsert);
+	
+	traverse(list,increament_by_five);
+	result1 = get_first_element(list);
+	result2 = get_last_element(list);
+
+	assertEqual(*(int*)result1, 6);
+	assertEqual(*(int*)result2, 7);
 };
