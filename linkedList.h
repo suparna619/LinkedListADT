@@ -5,6 +5,7 @@ typedef struct student Student;
 typedef struct linked_list LinkedList;
 typedef LinkedList * linkedList_ptr;
 typedef void functionRef(void*); 
+typedef int Predicate (void*);
 
 
 struct student
@@ -29,8 +30,13 @@ struct node{
 
 
 LinkedList createList(void);
-Node * create_node(void *data);
+Node *create_node(void *data);
 int add_to_list(LinkedList *,Node *);
 void *get_first_element(LinkedList list);
 void *get_last_element(LinkedList list);
 void traverse(LinkedList list, functionRef* operation);
+void *getElementAt(LinkedList list, int index);
+int indexOf(LinkedList list, void *data);
+void * deleteElementAt(LinkedList* list, int index);
+int asArray(LinkedList list, void** array);
+LinkedList * filter(LinkedList list,Predicate* test);
