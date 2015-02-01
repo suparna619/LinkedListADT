@@ -89,3 +89,25 @@ void * deleteElementAt(LinkedList* list, int index){
 	}
 	return NULL;
 };
+
+int asArray(LinkedList list, void** array){
+	int counter;
+	for (counter = 0; counter < list.count; counter++)
+	{
+		array[counter] = list.head;
+		list.head = list.head->next;
+	}
+	return counter;
+}
+
+LinkedList * filter(LinkedList list,MatchFunc* funcRef){
+	LinkedList *result = malloc(sizeof(LinkedList));
+	int counter;
+	*result = createList();
+	for(counter = 0; counter < list.count; counter++){
+		if(funcRef(list.head->data))
+			add_to_list(result,list.head);
+		list.head = list.head->next;
+	}
+	return result;
+}

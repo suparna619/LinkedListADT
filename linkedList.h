@@ -5,7 +5,7 @@ typedef struct student Student;
 typedef struct linked_list LinkedList;
 typedef LinkedList * linkedList_ptr;
 typedef void functionRef(void*); 
-typedef int Predicate (void*);
+typedef int MatchFunc (void*);
 
 
 struct student
@@ -15,7 +15,6 @@ struct student
 	int score;
 	Student *next;	
 };
-
 
 struct linked_list{
 	Node_ptr head;
@@ -39,4 +38,4 @@ void *getElementAt(LinkedList list, int index);
 int indexOf(LinkedList list, void *data);
 void * deleteElementAt(LinkedList* list, int index);
 int asArray(LinkedList list, void** array);
-LinkedList * filter(LinkedList list,Predicate* test);
+LinkedList * filter(LinkedList list,MatchFunc* funcRef);

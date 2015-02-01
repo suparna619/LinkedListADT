@@ -411,7 +411,6 @@ void test__indexOf_03__indexOf_returns_the_index_for_valid_elements(){
 
 void test__deleteElementAt_01__deleteElementAt_at_index_0(){
 	void *result, *resultAfterDeletion;
-	int element1 = 1, element2 = 2, element3 = 3;
 	int data1 = 1, data2 = 2, data3 = 3;
 	int index = 0;
 	LinkedList list = createList();
@@ -432,7 +431,6 @@ void test__deleteElementAt_01__deleteElementAt_at_index_0(){
 
 void test__deleteElementAt_02__deleteElementAt_at_index_1(){
 	void *result, *resultAfterDeletion;
-	int element1 = 1, element2 = 2, element3 = 3;
 	int data1 = 1, data2 = 2, data3 = 3;
 	int index = 1;
 	LinkedList list = createList();
@@ -454,7 +452,6 @@ void test__deleteElementAt_02__deleteElementAt_at_index_1(){
 void test__deleteElementAt_03__deleteElementAt_at_index_2(){
 	void *result;
 	int *resultAfterDeletion;
-	int element1 = 1, element2 = 2, element3 = 3;
 	int data1 = 1, data2 = 2, data3 = 3;
 	int index = 2;
 	LinkedList list = createList();
@@ -476,7 +473,6 @@ void test__deleteElementAt_03__deleteElementAt_at_index_2(){
 void test__deleteElementAt_04__deleteElementAt_returns_NULL_for_invalid_index(){
 	void *result;
 	int *resultAfterDeletion;
-	int element1 = 1, element2 = 2, element3 = 3;
 	int data1 = 1, data2 = 2, data3 = 3;
 	int index = 5;
 	LinkedList list = createList();
@@ -499,7 +495,6 @@ void test__deleteElementAt_04__deleteElementAt_returns_NULL_for_invalid_index(){
 void test__deleteElementAt_05__deleteElementAt_returns_NULL_for_negative_index(){
 	void *result;
 	int *resultAfterDeletion;
-	int element1 = 1, element2 = 2, element3 = 3;
 	int data1 = 1, data2 = 2, data3 = 3;
 	int index = -2;
 	LinkedList list = createList();
@@ -517,3 +512,86 @@ void test__deleteElementAt_05__deleteElementAt_returns_NULL_for_negative_index()
 	assertEqual((int)result, 0);
 	assertEqual(*resultAfterDeletion, 3);
 }
+
+void test__asArray_01__asArray_contains_3_elements_reference(){
+	int length,array[3];
+	int data1 = 1, data2 = 2, data3 = 3;
+	LinkedList list = createList();
+	Node_ptr firstNodeToInsert = create_node((void*)data1);
+	Node_ptr secondNodeToInsert = create_node((void*)data2);
+	Node_ptr thirdNodeToInsert = create_node((void*)data3);
+
+	add_to_list(&list, firstNodeToInsert);
+	add_to_list(&list, secondNodeToInsert);
+	add_to_list(&list, thirdNodeToInsert);
+	length = asArray(list,(void**)array);
+
+	assertEqual(length,3);
+	assertEqual(*(int*)array[0],1);
+	assertEqual(*(int*)array[1],2);
+	assertEqual(*(int*)array[2],3);
+};
+
+
+void test__asArray_02__asArray_contains_3(){
+	int length,array[3];
+	int data1 = 1, data2 = 2, data3 = 3;
+	LinkedList list = createList();
+	Node_ptr firstNodeToInsert = create_node((void*)data1);
+	Node_ptr secondNodeToInsert = create_node((void*)data2);
+	Node_ptr thirdNodeToInsert = create_node((void*)data3);
+
+	add_to_list(&list, firstNodeToInsert);
+	add_to_list(&list, secondNodeToInsert);
+	add_to_list(&list, thirdNodeToInsert);
+	length = asArray(list,(void**)array);
+
+	assertEqual(length,3);
+	assertEqual(*(int*)array[0],1);
+	assertEqual(*(int*)array[1],2);
+	assertEqual(*(int*)array[2],3);
+};
+
+void test__asArray_03__asArray_will_contain_lenth_2(){
+	char *data1 = "STRING-DATA1";
+	char *data2 = "STRING-DATA2";
+	char *array[2];
+	int length;
+	Node_ptr node1 = create_node((void*)data1);
+	Node_ptr node2 = create_node((void*)data2);
+	LinkedList list = createList();
+
+	add_to_list(&list,node1);
+	add_to_list(&list,node2);
+
+	length = asArray(list,(void**)array);
+	assertEqual(length,2);
+
+	assertEqual(strcmp(*(char**)array[0],"STRING-DATA1"),0);
+	assertEqual(strcmp(*(char**)array[1],"STRING-DATA2"),0);
+	free(node1);
+	free(node2);
+};
+
+int isPositive(void* element){
+	return ((int)element > 0);
+};
+
+void test_filter_returns_list_of_data_23_and_45(){
+	LinkedList *result;
+
+	int data1 = 1, data2 = -2, data3 = 3;
+	LinkedList list = createList();
+	Node_ptr firstNodeToInsert = create_node((void*)data1);
+	Node_ptr secondNodeToInsert = create_node((void*)data2);
+	Node_ptr thirdNodeToInsert = create_node((void*)data3);
+
+	add_to_list(&list, firstNodeToInsert);
+	add_to_list(&list, secondNodeToInsert);
+	add_to_list(&list, thirdNodeToInsert);
+
+	result = filter(list,isPositive);
+
+	assertEqual((int)result->count,2);
+	free(result);
+};
