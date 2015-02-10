@@ -1,3 +1,4 @@
 linkedListTest.o
+linkedListTest.c
 linkedListTestRunner.c
 linkedListTestRunner.exe

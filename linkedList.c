@@ -1,13 +1,13 @@
+#include "linkedList.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "linkedList.h"
 
 LinkedList createList(void){
-	LinkedList *newList = malloc(sizeof(LinkedList));
-	newList->head = NULL;
-	newList->tail = NULL;
-	newList->count = 0;
-	return *newList;
+	LinkedList newList;
+	newList.head = NULL;	//(*newList).head = NULL;
+	newList.tail = NULL;
+	newList.count = 0;
+	return newList;
 }
 
 Node *create_node(void *data){
@@ -15,99 +15,117 @@ Node *create_node(void *data){
 	newNode->data = data;
 	newNode->next = NULL;
 	return newNode;
-};
+}
 
 int add_to_list(LinkedList *list, Node *node){
-	if(list->head == NULL)
+	if(node == NULL)
+		return 0;
+	if(list->head == NULL && list->tail == NULL)
 		list->head = node;
-    else
-    	list->tail->next = node;
+	else
+		list->tail->next = node;
 	list->tail = node;
 	list->count++;
-    return list->count;
+	return 1;
 }
 
 void *get_first_element(LinkedList list){
-	return list.head;
+	return list.head->data;
 }
 
 void *get_last_element(LinkedList list){
-	return list.tail;
+	return list.tail->data;
 }
 
-void traverse(LinkedList list, functionRef* operation){
-	while(list.head != NULL){
-		operation(&(list.head->data));
-		list.head = list.head->next;
-	}
+void traverse(LinkedList list, void (*function_ptr)(void *data)){
+	Node_ptr walker = list.head;
+	while(walker != NULL){
+		function_ptr(walker->data);
+		walker = walker->next;
+	}	
 }
 
 void *getElementAt(LinkedList list, int index){
-	int count;
-	if(list.count<index || index<0)
-		return NULL;
-	for(count = 0; count<=index; count++){
-		if(count == index)
-			return list.head->data;
-		list.head = list.head->next;
-	}
-	return NULL;
+	int i;
+	Node_ptr walker = list.head;
+	for(i = 0; i<index; i++)
+		walker = walker->next;
+	return walker->data;
 }
 
 int indexOf(LinkedList list, void *data){
-	int count;
-	for(count = 0; count<list.count; count++){
-		if(list.head->data == data)
-			return count;
-		list.head = list.head->next;
+	int i;
+	Node_ptr walker = list.head;
+	for(i = 0; i<list.count; i++){
+		if(data == walker->data)
+			return i;
+		walker = walker->next;
 	}
 	return -1;
 }
 
-void* deleteHead(LinkedList *list,int index){
-	Node_ptr walker = list->head;
+void *deleteElementAtStart(LinkedList *list, int index){
+	void *data = list->head->data;
 	list->head = list->head->next;
-	if(list->count==0)
+	if(list->count == 1)
 		list->tail = NULL;
-	return walker->data;
-};
-
-void * deleteElementAt(LinkedList* list, int index){
-	int i=0;
-	Node_ptr walker = list->head;
-	Node_ptr temp;
-	if(index==0)
-		return deleteHead(list,0);
-	for(i=0;i < list->count;i++){
-		temp = walker;
-		walker = walker->next;
-		if(i==index-1){
-			list->count--;
-			(walker->next==NULL)?(list->tail = temp):(temp->next = walker->next);
-			return walker->data;
-		};
-	}
-	return NULL;
-};
-
-int asArray(LinkedList list, void** array){
-	int counter;
-	for (counter = 0; counter < list.count; counter++)
-	{
-		array[counter] = list.head;
-		list.head = list.head->next;
-	}
-	return counter;
+	list->count--;
+	return data;
 }
 
-LinkedList * filter(LinkedList list,MatchFunc* funcRef){
-	LinkedList *result = malloc(sizeof(LinkedList));
-	int counter;
-	*result = createList();
-	for(counter = 0; counter < list.count; counter++){
-		if(funcRef(list.head->data))
-			add_to_list(result,list.head);
-		list.head = list.head->next;
+void *deleteElementAtEnd(LinkedList *list, int index){
+	int i;
+	void *data = list->tail->data;
+	Node_ptr walker = list->head;
+	for(i = 0; i< list->count-2; i++)
+		walker = walker->next;
+	list->tail = walker;
+	list->count--;
+	return data;
+}
+
+void *deleteElementAtMiddle(LinkedList *list, int index){
+	int i;
+	void *data;
+	Node_ptr walker = list->head;
+	for(i= 0; i<index-2; i++)
+		walker = walker->next;
+	data = walker->next->data;
+	walker->next = walker->next->next;
+	list->count--;
+	return data;
+}
+
+void *deleteElementAt(LinkedList *list, int index){
+	if(list->count == 0 || index >= list->count || index <0)
+		return NULL;
+	if(index == 0)
+		return deleteElementAtStart(list, index);
+	if(index == list->count-1)
+		return deleteElementAtEnd(list, index);
+	else
+		return deleteElementAtMiddle(list, index);
+}
+
+int asArray(LinkedList list, void **array){
+	int i = 0;
+	Node_ptr walker = list.head;
+	while(i<list.count){
+		array[i] = walker->data;
+		walker = walker->next;
+		i++;
 	}
-	return result;
+	return i;
+}
+
+LinkedList *filter(LinkedList list, int (*function_ptr)(void *data)){
+	LinkedList_ptr resultedLinkedList;
+	Node_ptr walker = list.head;
+	resultedLinkedList = malloc(sizeof(LinkedList));
+	while(walker != NULL){
+		if(function_ptr(walker->data))
+			add_to_list(resultedLinkedList, create_node(walker->data));
+		walker = walker->next;
+	}
+	return resultedLinkedList;
 }
